@@ -1,13 +1,9 @@
 export const weakMap = new WeakMap();
 
-export function queryAPI(endPoint) {
-  if (weakMap.get(endPoint) >= 5) {
-    throw new Error('Endpoint load is high');
-  }
-  if (weakMap.get(endPoint) === undefined) {
-    weakMap.set(endPoint, 1);
-  } else {
-    weakMap.set(endPoint, weakMap.get(endPoint) + 1);
-  }
-  return endPoint;
+// https://stackoverflow.com/questions/29413222/what-are-the-actual-uses-of-es6-weakmap
+export function queryAPI(endpoint) {
+  let called = 0;
+  if (weakMap.get(endpoint)) called = weakMap.get(endpoint);
+  weakMap.set(endpoint, called + 1);
+  if (called + 1 >= 5) throw new Error('Endpoint load is high');
 }
